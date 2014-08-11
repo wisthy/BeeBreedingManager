@@ -3,7 +3,10 @@ package be.shoktan.BeeBreedingManager.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -23,6 +26,12 @@ public abstract class ABaseEntity {
 	 */
 	public Long getId() {
 		return id;
+	}
+
+
+	public int compareTo(ABaseEntity o) {
+		return new CompareToBuilder().append(this.id, o.id)
+				.toComparison();
 	}
 	
 	
