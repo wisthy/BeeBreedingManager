@@ -1,6 +1,9 @@
 package be.shoktan.BeeBreedingManager.model;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,13 +20,16 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  *
  */
 @Entity @Inheritance(strategy=InheritanceType.JOINED)
-public abstract class Specification extends ABaseEntity implements Comparable<Specification>{
+public abstract class Specification extends ABaseEntity implements Comparable<Specification>, Iterable<Specification>{
 
 	@Column(unique = true)
 	private String name;
 
 	@ManyToMany
 	private Collection<Group> groups;
+	
+	@ManyToMany(mappedBy = "parents")
+	private Collection<Mutation> mutations;
 
 
 
@@ -53,19 +59,43 @@ public abstract class Specification extends ABaseEntity implements Comparable<Sp
 	/**
 	 * @param groups the groups to set
 	 */
-	public void setGroups(Collection<Group> groups) {
-		this.groups = groups;
+	public void setGroups(Collection<Group> groups) {		
+		this.groups = new TreeSet<>();
+		for(Group group : groups){
+			this.addGroup(group);
+		}
+	}	
+	
+	/**
+	 * @return the mutations
+	 */
+	public Collection<Mutation> getMutations() {
+		return mutations;
+	}
+
+	/**
+	 * @param mutations the mutations to set
+	 */
+	public void setMutations(Collection<Mutation> mutations) {
+		this.mutations = mutations;
 	}	
 
 
-
 	// ********** Abstract ********** //
+
+
 
 	/**
 	 * 
 	 * @return the type of the instance 
 	 */
 	protected abstract ESpecificationType getType();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Iterable#iterator()
+	 */
+	public abstract Iterator<Specification> iterator();
 
 
 
@@ -83,5 +113,28 @@ public abstract class Specification extends ABaseEntity implements Comparable<Sp
 				.toComparison();
 	}
 
+	/**
+	 * Add a group to this specification 
+	 * @param group the group to add
+	 */
+	public void addGroup(Group group){
+		addGroup(group, true);
+	}
+	
+	
+	/**
+	 * Add a group to this specification 
+	 * @param group the group to add
+	 * @param reverse if true, add this specification to the group too. 
+	 */
+	public void addGroup(Group group, boolean reverse){
+		if(this.groups == null){
+			this.groups = new TreeSet<>();
+		}
+		this.groups.add(group);
+		if(reverse){
+			group.addMember(this, false);
+		}
+	}
 
 }
