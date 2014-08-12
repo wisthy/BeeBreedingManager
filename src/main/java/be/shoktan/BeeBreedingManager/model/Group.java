@@ -1,6 +1,8 @@
 package be.shoktan.BeeBreedingManager.model;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -31,7 +33,10 @@ public class Group extends Specification {
 	 * @param members the members to set
 	 */
 	public void setMembers(Collection<Specification> members) {
-		this.members = members;
+		this.members = new TreeSet<>();
+		for(Specification member : members){
+			this.addMember(member);
+		}
 	}
 	
 	
@@ -45,5 +50,40 @@ public class Group extends Specification {
 	@Override
 	protected ESpecificationType getType() {
 		return ESpecificationType.group;
+	}
+	
+	/**
+	 * Add a specification to this group 
+	 * @param member the specification to add
+	 */
+	public void addMember(Specification member){
+		addMember(member, true);
+	}
+	
+	/**
+	 * Add a specification to this group 
+	 * @param member the specification to add
+	 * @param reverse if true, add this specification to the group too. 
+	 */
+	public void addMember(Specification member, boolean reverse){
+		if(this.members == null){
+			this.members = new TreeSet<>();
+		}
+		this.members.add(member);
+		if(reverse){
+			member.addGroup(this, false);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see be.shoktan.BeeBreedingManager.model.Specification#iterator()
+	 */
+	@Override
+	public Iterator<Specification> iterator() {
+		if(this.members == null){
+			this.members = new TreeSet<>();
+		}
+		return this.members.iterator();
 	}
 }
