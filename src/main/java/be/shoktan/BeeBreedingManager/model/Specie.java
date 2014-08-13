@@ -48,7 +48,7 @@ public class Specie extends Specification {
 		 */
 		@Override
 		public boolean hasNext() {
-			return done;
+			return !done;
 		}
 
 		/*
