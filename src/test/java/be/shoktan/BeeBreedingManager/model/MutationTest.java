@@ -62,6 +62,24 @@ public class MutationTest {
 		assertTrue(result.contains(meadow));
 		assertTrue(result.contains(gNatural));
 		assertTrue(result.contains(mystical));
+		
+		
+		
+		mCultivated.derivate();result = new ArrayList<>();
+		for(Mutation m : forest.getMutations()){
+			if(m.getParents().get(0).equals(forest)){
+				result.add(m.getParents().get(1));
+				System.out.println("ok: "+m);
+			}else{
+				System.out.println("ko: "+m);
+			}
+		}
+		assertEquals(4, result.size());
+		assertTrue(result.contains(meadow));
+		assertTrue(result.contains(gNatural));
+		assertTrue(result.contains(mystical));
+		assertTrue(result.contains(common));
+		assertFalse(result.contains(cultivated));
 	}
 
 }
