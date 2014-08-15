@@ -33,7 +33,7 @@ public class Group extends Specification {
 	 * @param members the members to set
 	 */
 	public void setMembers(Collection<Specification> members) {
-		this.members = new TreeSet<>();
+		this.members = new TreeSet<Specification>();
 		for(Specification member : members){
 			this.addMember(member);
 		}
@@ -67,7 +67,7 @@ public class Group extends Specification {
 	 */
 	public void addMember(Specification member, boolean reverse){
 		if(this.members == null){
-			this.members = new TreeSet<>();
+			this.members = new TreeSet<Specification>();
 		}
 		this.members.add(member);
 		if(reverse){

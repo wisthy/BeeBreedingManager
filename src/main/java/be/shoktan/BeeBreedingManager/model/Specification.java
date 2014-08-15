@@ -137,4 +137,15 @@ public abstract class Specification extends ABaseEntity implements Comparable<Sp
 		}
 	}
 
+	/**
+	 * Add a mutation to this specification
+	 * @param m the mutation to add
+	 */
+	public void addMutation(Mutation m) {
+		if(this.mutations == null){
+			this.mutations = new TreeSet<>();
+		}
+		this.mutations.add(m);
+	}
+
 }
