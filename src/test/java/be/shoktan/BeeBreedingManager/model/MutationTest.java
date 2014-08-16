@@ -6,8 +6,11 @@ import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MutationTest {
+	static final Logger LOG = LoggerFactory.getLogger(MutationTest.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -41,10 +44,10 @@ public class MutationTest {
 		cultivated.setName("cultivated");
 		
 		Mutation mCommon = new Mutation(gNatural, gMundane, common, false, "");
-		System.out.println(mCommon);
+		if(LOG.isDebugEnabled())LOG.debug(mCommon.toString());
 		
 		Mutation mCultivated = new Mutation(gMundane, common, cultivated, false, "");
-		System.out.println(mCultivated);
+		if(LOG.isDebugEnabled())LOG.debug(mCultivated.toString());
 		
 		mCommon.derivate();
 		
@@ -53,9 +56,9 @@ public class MutationTest {
 		for(Mutation m : forest.getMutations()){
 			if(m.getParents().get(0).equals(forest)){
 				result.add(m.getParents().get(1));
-				System.out.println("ok: "+m);
+				if(LOG.isDebugEnabled())LOG.debug("ok: "+m);
 			}else{
-				System.out.println("ko: "+m);
+				if(LOG.isDebugEnabled())LOG.debug("ko: "+m);
 			}
 		}
 		assertEquals(3, result.size());
@@ -69,9 +72,9 @@ public class MutationTest {
 		for(Mutation m : forest.getMutations()){
 			if(m.getParents().get(0).equals(forest)){
 				result.add(m.getParents().get(1));
-				System.out.println("ok: "+m);
+				if(LOG.isDebugEnabled())LOG.debug("ok: "+m);
 			}else{
-				System.out.println("ko: "+m);
+				if(LOG.isDebugEnabled())LOG.debug("ko: "+m);
 			}
 		}
 		assertEquals(4, result.size());

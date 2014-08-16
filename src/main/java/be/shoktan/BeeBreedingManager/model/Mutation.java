@@ -11,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Model class to represent mutation between to species or group of species resulting in a new specie
@@ -19,6 +21,8 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  */
 @Entity
 public class Mutation extends ABaseEntity implements Comparable<Mutation>{
+	static final Logger LOG = LoggerFactory.getLogger(Mutation.class);
+	
 	private boolean identicalAllowed;
 
 	@ManyToMany
@@ -221,30 +225,30 @@ public class Mutation extends ABaseEntity implements Comparable<Mutation>{
 	 * - in case one of the parents is a group, create a new mutation for each member of this group instead of the group itself
 	 */
 	public void derivate(){
-		System.out.println(">>> "+this.getId()+" derivating");
+		if(LOG.isTraceEnabled())LOG.trace(">>> "+this.getId()+" derivating");
 		// add the reverse mutation 
 		if(this.parents == null || this.parents.size() < 2){
-			System.out.println("ko for "+this.getId());
+			if(LOG.isDebugEnabled())LOG.debug("ko for "+this.getId());
 			return;
 		}
 
 		Specification first = this.parents.get(0);
 		for(Specification s1 : first){
-			System.out.println(this.getId()+"-> "+s1);
+			if(LOG.isDebugEnabled())LOG.debug(this.getId()+"-> "+s1);
 			Specification second = this.parents.get(1);
 			for(Specification s2 : second){
-				System.out.println(this.getId()+"\t -> "+s2);
+				if(LOG.isDebugEnabled())LOG.debug(this.getId()+"\t -> "+s2);
 				if(s1 != first || s2 != second){
 					if(s1 != s2 || this.identicalAllowed){
 						Mutation m = new Mutation(this.identicalAllowed, toSpecificationCollection(s1, s2), this.result, this.remark, this);
 						s1.addMutation(m);
 						s2.addMutation(m);
-						System.out.println("D: "+m);
+						if(LOG.isDebugEnabled())LOG.debug("D: "+m);
 						m.derivate();
 					}
 					if(s1 != s2){
 						Mutation m = new Mutation(this.identicalAllowed, toSpecificationCollection(s2, s1), this.result, this.remark, this);
-						System.out.println("RD: "+m);
+						if(LOG.isDebugEnabled())LOG.debug("RD: "+m);
 						s1.addMutation(m);
 						s2.addMutation(m);
 						//m.derivate();
@@ -252,7 +256,7 @@ public class Mutation extends ABaseEntity implements Comparable<Mutation>{
 				}
 			}
 		}
-		System.out.println("<<< "+this.getId()+" derivating");
+		if(LOG.isTraceEnabled())LOG.trace("<<< "+this.getId()+" derivating");
 	}
 
 	/*
