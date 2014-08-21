@@ -1,5 +1,7 @@
 package be.shoktan.BeeBreedingManager.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import javax.persistence.Entity;
@@ -28,6 +30,23 @@ public class Specie extends Specification {
 	@Override
 	public Iterator<Specification> iterator() {
 		return new SpecieIterator(this);
+	}
+	
+	public Collection<Specie> mutationResultWith(Specie second) {
+		if(second == null){
+			return null;
+		}
+		
+		Collection<Specie> result = new ArrayList<>();
+		
+		for(Mutation m : this.getMutations()){
+			Specification other = m.getOther(this);
+			if(second.equals(other)){
+				result.addAll(m.getResult());
+			}
+		}
+		
+		return result;
 	}
 	
 	private class SpecieIterator implements Iterator<Specification>{
@@ -73,5 +92,7 @@ public class Specie extends Specification {
 		
 		
 	}
+
+	
 
 }
