@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package be.shoktan.BeeBreedingManager.model;
 
 import java.util.Collection;
@@ -88,5 +91,31 @@ public class BeeCollection extends ANamedEntity{
 	public boolean addSpecie(Specie specie){
 		initOwnedSpecies();
 		return this.ownedSpecies.add(specie);
+	}
+	
+	
+	public Collection<Specie> available(){
+		Collection<Specie> result = new TreeSet<>();
+		initOwnedSpecies();
+		
+		for(Specie first : this.ownedSpecies){
+			result.add(first);
+			for(Specie second : this.ownedSpecies){
+				if(second == null || second.compareTo(first) < 0){
+					continue;
+				}
+				
+				if(second.compareTo(first) > 0){
+					result.add(second);
+				}
+				
+				Collection<Specie> childs = first.mutationResultWith(second);
+				if(childs != null){
+					result.addAll(childs);
+				}
+			}
+		}
+		
+		return result;
 	}
 }
