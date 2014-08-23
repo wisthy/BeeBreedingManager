@@ -35,6 +35,9 @@ public class Mutation extends ABaseEntity implements Comparable<Mutation>{
 
 	@ManyToOne
 	private Mutation derivatedFrom;
+	
+	@ManyToOne
+	private PluginVersion plugins;
 
 
 
@@ -120,6 +123,20 @@ public class Mutation extends ABaseEntity implements Comparable<Mutation>{
 	 */
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	/**
+	 * @return the plugins
+	 */
+	public PluginVersion getPlugins() {
+		return plugins;
+	}
+
+	/**
+	 * @param plugins the plugins to set
+	 */
+	public void setPlugins(PluginVersion plugins) {
+		this.plugins = plugins;
 	}
 
 	/**
